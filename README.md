@@ -15,7 +15,10 @@ from redash_dynamic_query import RedashDynamicQuery
 
 redash = RedashDynamicQuery(
     endpoint='http://myredash-host',
-    apikey='secret_apikey')
+    apikey='secret_apikey',
+    data_source_id=2,
+    #max_age=0,  # option
+    )
 
 query_id = 111
 bind = {
