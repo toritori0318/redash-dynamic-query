@@ -1,7 +1,10 @@
 import time
+
 import requests
 
+
 class RedashDynamicQuery():
+
     def __init__(self, endpoint, apikey, data_source_id, max_age=0):
         self.endpoint = endpoint
         self.apikey = apikey
@@ -27,17 +30,17 @@ class RedashDynamicQuery():
 
     def _build_query(self, query_id, query_body):
         return {
-            "query": query_body,
-            "query_id": query_id,
-            "data_source_id": self.data_source_id, 
-            "max_age": self.max_age,
+            'query': query_body,
+            'query_id': query_id,
+            'data_source_id': self.data_source_id,
+            'max_age': self.max_age,
         }
 
     def _wait_job(self, job):
         for x in range(60):
             response = self._api_jobs(job['id'])
             job = response['job']
-            if job['status'] in [3,4]:
+            if job['status'] in [3, 4]:
                 break
             time.sleep(1)
         else:
@@ -51,7 +54,7 @@ class RedashDynamicQuery():
     def _api_queries(self, query_id):
         response = requests.get(
             '%s/api/queries/%s' % (self.endpoint, query_id),
-            headers={'Authorization': 'Key %s' % self.apikey},
+            params={'api_key': self.apikey},
         )
         if response.status_code != 200:
             raise Exception('api_queries. [%d]' % response.status_code)
@@ -60,9 +63,9 @@ class RedashDynamicQuery():
 
     def _api_query_results(self, query_id, query_string):
         response = requests.post(
-            '%s/api/query_results' % self.endpoint, 
-            headers={'Authorization': 'Key %s' % self.apikey},
-            json=query_string
+            '%s/api/query_results' % self.endpoint,
+            params={'api_key': self.apikey},
+            json=query_string,
         )
         if response.status_code != 200:
             raise Exception('query_results failed. [%d]' % response.status_code)
@@ -72,7 +75,7 @@ class RedashDynamicQuery():
     def _api_jobs(self, job_id):
         response = requests.get(
             '%s/api/jobs/%s' % (self.endpoint, job_id),
-            headers={'Authorization': 'Key %s' % self.apikey},
+            params={'api_key': self.apikey},
         )
         if response.status_code != 200:
             raise Exception('api_jobs failed. [%d]' % response.status_code)
@@ -82,10 +85,9 @@ class RedashDynamicQuery():
     def _api_query_results_json(self, query_id, query_result_id):
         response = requests.get(
             '%s/api/queries/%s/results/%s.json' % (self.endpoint, query_id, query_result_id),
-            headers={'Authorization': 'Key %s' % self.apikey},
+            params={'api_key': self.apikey},
         )
         if response.status_code != 200:
             raise Exception('api_query_results_json failed. [%d]' % response.status_code)
 
         return response.json()
-
