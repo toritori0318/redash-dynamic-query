@@ -18,7 +18,7 @@ class RedashDynamicQuery():
             query_body = query_body.format(**bind)
 
         # post query result
-        response = self._api_query_results(query_id, self._build_query(query_id, query_body))
+        response = self._api_query_results(self._build_query(query_id, query_body))
         job = response['job']
 
         # wait job
@@ -61,7 +61,7 @@ class RedashDynamicQuery():
 
         return response.json()
 
-    def _api_query_results(self, query_id, query_string):
+    def _api_query_results(self, query_string):
         response = requests.post(
             '%s/api/query_results' % self.endpoint,
             params={'api_key': self.apikey},
