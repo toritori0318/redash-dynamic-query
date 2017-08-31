@@ -4,7 +4,6 @@ import requests
 
 
 class RedashDynamicQuery():
-
     def __init__(self, endpoint, apikey, data_source_id, max_age=0):
         self.endpoint = endpoint
         self.apikey = apikey
@@ -19,9 +18,11 @@ class RedashDynamicQuery():
 
         # post query result
         response = self._api_query_results(self._build_query(query_id, query_body))
-        job = response['job']
+        if 'query_result' in response:
+            return response
 
         # wait job
+        job = response['job']
         job_result = self._wait_job(job)
         query_result_id = job_result['query_result_id']
 
