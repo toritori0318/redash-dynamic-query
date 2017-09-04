@@ -4,11 +4,12 @@ import requests
 
 
 class RedashDynamicQuery():
-    def __init__(self, endpoint, apikey, data_source_id, max_age=0):
+    def __init__(self, endpoint, apikey, data_source_id, max_age=0, max_wait=60):
         self.endpoint = endpoint
         self.apikey = apikey
         self.data_source_id = data_source_id
         self.max_age = max_age
+        self.max_wait = max_wait
 
     def query(self, query_id, bind=None):
         # get query body
@@ -38,7 +39,7 @@ class RedashDynamicQuery():
         }
 
     def _wait_job(self, job):
-        for x in range(60):
+        for x in range(self.max_wait):
             response = self._api_jobs(job['id'])
             job = response['job']
             if job['status'] in [3, 4]:
