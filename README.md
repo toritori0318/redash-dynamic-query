@@ -18,6 +18,7 @@ redash = RedashDynamicQuery(
     apikey='secret_apikey',
     data_source_id=2,
     max_age=0,  # Optional, default value is 0
+    max_wait=60,  # Optional, default value is 60
 )
 
 query_id = 111
