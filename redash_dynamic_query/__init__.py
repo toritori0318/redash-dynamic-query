@@ -11,7 +11,10 @@ class RedashDynamicQuery():
         self.max_age = max_age
         self.max_wait = max_wait
 
-    def query(self, query_id, bind=None):
+    def query(self, query_id, bind=None, as_csv=False):
+        if as_csv and self.max_age != 0:
+            raise Exception('When you want to call it with as_csv argument as True, max_age field have to be 0.')
+
         # get query body
         query_body = self._api_queries(query_id)['query'].replace('{{', '{').replace('}}', '}')
         if bind:
@@ -28,6 +31,9 @@ class RedashDynamicQuery():
         query_result_id = job_result['query_result_id']
 
         # get query result
+        if as_csv:
+            return self._api_query_results_csv(query_id, query_result_id)
+
         return self._api_query_results_json(query_id, query_result_id)
 
     def _build_query(self, query_id, query_body):
@@ -93,3 +99,13 @@ class RedashDynamicQuery():
             raise Exception('api_query_results_json failed. [%d]' % response.status_code)
 
         return response.json()
+
+    def _api_query_results_csv(self, query_id, query_result_id):
+        response = requests.get(
+            '%s/api/queries/%s/results/%s.csv' % (self.endpoint, query_id, query_result_id),
+            params={'api_key': self.apikey},
+        )
+        if response.status_code != 200:
+            raise Exception('api_query_results_csv failed. [%d]' % response.status_code)
+
+        return response.text
