@@ -16,7 +16,7 @@ class RedashDynamicQuery():
             raise Exception('When you want to call it with as_csv argument as True, max_age field have to be 0.')
 
         # get query body
-        query_body = self._api_queries(query_id)['query'].replace('{{', '{').replace('}}', '}')
+        query_body = self._api_queries(query_id)['query'].replace('{{{', '{').replace('}}}', '}').replace('{{', '{').replace('}}', '}')
         if bind:
             query_body = query_body.format(**bind)
 
