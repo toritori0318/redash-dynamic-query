@@ -5,7 +5,7 @@ A tool for executing dynamic query of redash.
 ## Install
 
 ```
-pip install git+https://github.com/toritori0318/redash-dynamic-query
+pip install redash-dynamic-query
 ```
 
 ## SYNOPSIS
