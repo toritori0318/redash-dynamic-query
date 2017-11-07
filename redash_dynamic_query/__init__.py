@@ -1,5 +1,6 @@
 import time
 
+import pystache
 import requests
 
 
@@ -16,9 +17,10 @@ class RedashDynamicQuery():
             raise Exception('When you want to call it with as_csv argument as True, max_age field have to be 0.')
 
         # get query body
-        query_body = self._api_queries(query_id)['query'].replace('{{{', '{').replace('}}}', '}').replace('{{', '{').replace('}}', '}')
-        if bind:
-            query_body = query_body.format(**bind)
+        query_body = self._api_queries(query_id)['query']
+
+        # bind params to query body
+        query_body = self._bind_params(query_body, bind)
 
         # post query result
         response = self._api_query_results(self._build_query(query_id, query_body))
@@ -35,6 +37,13 @@ class RedashDynamicQuery():
             return self._api_query_results_csv(query_id, query_result_id)
 
         return self._api_query_results_json(query_id, query_result_id)
+
+    def _bind_params(self, query_body, bind):
+        if bind:
+            query_body = query_body.replace('{{{', '{{').replace('}}}', '}}')
+            query_body = pystache.render(query_body, bind)
+
+        return query_body
 
     def _build_query(self, query_id, query_body):
         return {
