@@ -28,6 +28,10 @@ class TestRedashDynamicQuery(unittest.TestCase):
         self.assertEqual(
             redash._bind_params('SELECT * FROM users WHERE name={{{user_name}}} AND {{{age_condition}}};', bind),
             'SELECT * FROM users WHERE name=\'johndoe\' AND age>35;')
+        bind = {'user_names': '"foo", "bar"'}
+        self.assertEqual(
+            redash._bind_params('SELECT * FROM users WHERE name IN ({{{user_names}}});', bind),
+            'SELECT * FROM users WHERE name IN ("foo", "bar");')
 
 
 if __name__ == '__main__':
