@@ -40,7 +40,6 @@ class RedashDynamicQuery():
 
     def _bind_params(self, query_body, bind):
         if bind:
-            query_body = query_body.replace('{{{', '{{').replace('}}}', '}}')
             query_body = pystache.render(query_body, bind)
 
         return query_body
