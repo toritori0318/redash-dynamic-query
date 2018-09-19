@@ -5,7 +5,7 @@ import requests
 
 
 class RedashDynamicQuery():
-    def __init__(self, endpoint, apikey, data_source_id, max_age=0, max_wait=60):
+    def __init__(self, endpoint, apikey, data_source_id=None, max_age=0, max_wait=60):
         self.endpoint = endpoint
         self.apikey = apikey
         self.data_source_id = data_source_id
@@ -16,14 +16,16 @@ class RedashDynamicQuery():
         if as_csv and self.max_age != 0:
             raise Exception('When you want to call it with as_csv argument as True, max_age field have to be 0.')
 
-        # get query body
-        query_body = self._api_queries(query_id)['query']
+        # get query body and query data source
+        query_info = self._api_queries(query_id)
+        query_body = query_info['query']
+        query_data_source_id = query_info['data_source_id']
 
         # bind params to query body
         query_body = self._bind_params(query_body, bind)
 
         # post query result
-        response = self._api_query_results(self._build_query(query_id, query_body))
+        response = self._api_query_results(self._build_query(query_id, query_body, query_data_source_id))
         if 'query_result' in response:
             return response
 
@@ -44,11 +46,14 @@ class RedashDynamicQuery():
 
         return query_body
 
-    def _build_query(self, query_id, query_body):
+    def _build_query(self, query_id, query_body, query_data_source_id=None):
+        data_source_id = self.data_source_id
+        if data_source_id is None:
+            data_source_id = query_data_source_id
         return {
             'query': query_body,
             'query_id': query_id,
-            'data_source_id': self.data_source_id,
+            'data_source_id': data_source_id,
             'max_age': self.max_age,
         }
 
