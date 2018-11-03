@@ -67,6 +67,11 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
 
+    entry_points={  
+        'console_scripts':
+            'rdq = redash_dynamic_query.cli.main:rdq_main'  
+    },  
+
     # What does your project relate to?
     keywords='redash',
 
