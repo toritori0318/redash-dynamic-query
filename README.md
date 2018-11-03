@@ -16,7 +16,7 @@ from redash_dynamic_query import RedashDynamicQuery
 redash = RedashDynamicQuery(
     endpoint='http://myredash-host',
     apikey='secret_apikey',
-    data_source_id=2,
+    data_source_id=2, # Optional, default auto fill
     max_age=0,  # Optional, default value is 0
     max_wait=60,  # Optional, default value is 60
 )
