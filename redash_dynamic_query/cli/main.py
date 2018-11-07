@@ -16,7 +16,6 @@ def rdq_main():
 
 def args_proc():
     parser = argparse.ArgumentParser(
-            description='Process some integers.',
             add_help = True,
             )
     parser.add_argument(
