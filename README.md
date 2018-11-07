@@ -54,8 +54,6 @@ print(result['query_result']['data'])
 usage: rdq [-h] [-d N] [-a N] [-w N] [-k APIKEY] [-e ENDPOINT] -q QUERY_ID
            [-p QUERY_PARAMETERS] [-f {csv,tsv,json,redash_csv}]
 
-Process some integers.
-
 optional arguments:
   -h, --help            show this help message and exit
   -d N, --data-source-id N
