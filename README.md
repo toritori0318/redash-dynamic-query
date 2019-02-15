@@ -22,6 +22,8 @@ redash = RedashDynamicQuery(
 )
 
 query_id = 111
+output_format = 'json' # Optional, default value is json
+
 bind = {
     'start_date': '2017-01-01T00:00:00',
     'end_date': '2017-01-01T23:59:59',
